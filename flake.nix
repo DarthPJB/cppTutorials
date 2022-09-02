@@ -22,7 +22,8 @@
         ];
         text = ''
           figlet "building sources"
-          g++ -Wall -Werror -ansi -pedantic-errors -g ./src/LessonOne.cpp -o ./build/LessonOne.o -c
+          # This builds sources with maximum warnings, debug-symbols, and zero optimsation - good for debugging
+          g++ -Wall -Werror -ansi -pedantic-errors -O0 -g ./src/LessonOne.cpp -o ./build/LessonOne.o -c
 
           figlet "Linking object files"
           g++ -o ./build/LessonOne-exe ./build/LessonOne.o
@@ -54,7 +55,7 @@
     };
 
     # generate final output stl files
-    packages."x86_64-linux".cppTutorials = pkgs.stdenv.mkDerivation
+    packages."x86_64-linux".LessonOne = pkgs.stdenv.mkDerivation
     {
       name = "cppTutorials";
       src = self;
@@ -66,9 +67,11 @@
       dontInstall = true;
       dontPatch = true;
       buildPhase = ''
-        
+        # Build output in a single step, with maximum optimsation, no debugging symbols - AND ALL THE WARNINGS
+        g++ -Wall -Werror -ansi -pedantic-errors -O3 ./src/LessonOne.cpp -o ./build/LessonOne
         mkdir -p $out
-        mv output/ $out/
+        mkdir -p $out/bin
+        mv build/LessonOne $out/bin/
       '';
     };
 
