@@ -8,3 +8,6 @@ This flake contains three distinct features.
  ## Lessons and concepts.
   - LessonOne - Basic debugger invocation and usage
   - LessonTwo - Horrible broken code.
+
+# do the lesson run, without doing the gitclone?
+Flakes are awesome, so awesome that you can ```  nix run github:darthpjb/cppTutorials#LessonOne ``` without ever cloning this repo - and still be debugging the source code, crazy huh?

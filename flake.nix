@@ -127,7 +127,6 @@
         mkdir -p $out/bin
         g++ -Wall -Werror -ansi -pedantic-errors -O3 \
         $src/src/LessonTwo.cpp $src/src/LessonTwoA.cpp -o $out/bin/LessonTwo
-        mv build/LessonTwo $out/bin/
       '';
     };
 
