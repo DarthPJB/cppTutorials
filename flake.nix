@@ -8,6 +8,35 @@
      pkgs = nixpkgs.legacyPackages."x86_64-linux";
   in
   {
+   # Fast preview for current configuration
+    apps."x86_64-linux".LessonOne =
+    let
+      preview_script = pkgs.writeShellApplication
+      {
+        name = "DebugLessonOne";
+        runtimeInputs =
+        [
+          pkgs.gcc
+          pkgs.gdb
+          pkgs.figlet
+        ];
+        text = ''
+          figlet "building sources"
+          g++ -Wall -Werror -ansi -pedantic-errors -g ./src/LessonOne.cpp -o ./build/LessonOne.o -c
+
+          figlet "Linking object files"
+          g++ -o ./build/LessonOne-exe ./build/LessonOne.o
+
+          figlet "invoking Debugger"
+          gdb ./build/LessonOne-exe
+        '';
+      };
+    in
+    {
+      type = "app";
+      program = "${preview_script}/bin/${preview_script.name}";
+    };
+
     # devshell for quick development
     devShell."x86_64-linux" = pkgs.mkShell
     {
