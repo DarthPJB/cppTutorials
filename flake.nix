@@ -75,6 +75,6 @@
       '';
     };
 
-    defaultPackage."x86_64-linux" = self.packages."x86_64-linux".cppTutorials;
+    defaultPackage."x86_64-linux" = self.packages."x86_64-linux".LessonOne;
   };
 }
