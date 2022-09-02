@@ -23,10 +23,44 @@
         text = ''
           figlet "building sources"
           # This builds sources with maximum warnings, debug-symbols, and zero optimsation - good for debugging
-          g++ -Wall -Werror -ansi -pedantic-errors -O0 -g ./src/LessonOne.cpp -o ./build/LessonOne.o -c
+          g++ -Wall -Werror -ansi -pedantic-errors -O0 -g -U_FORTIFY_SOURCE \
+          ./src/LessonOne.cpp -o ./build/LessonOne.o -c
 
           figlet "Linking object files"
           g++ -o ./build/LessonOne-exe ./build/LessonOne.o
+
+          figlet "invoking Debugger"
+          gdb ./build/LessonOne-exe
+        '';
+      };
+    in
+    {
+      type = "app";
+      program = "${preview_script}/bin/${preview_script.name}";
+    };
+
+   # Fast preview for current configuration
+    apps."x86_64-linux".LessonTwo =
+    let
+      preview_script = pkgs.writeShellApplication
+      {
+        name = "DebugLessonTwo";
+        runtimeInputs =
+        [
+          pkgs.gcc
+          pkgs.gdb
+          pkgs.figlet
+        ];
+        text = ''
+          figlet "building sources"
+          # This builds sources with maximum warnings, debug-symbols, and zero optimsation - good for debugging
+          g++ -Wall -Werror -ansi -pedantic-errors -O0 -g -U_FORTIFY_SOURCE \
+            ./src/LessonTwo.cpp -o ./build/LessonTwo.o -c
+          g++ -Wall -Werror -ansi -pedantic-errors -O0 -g -U_FORTIFY_SOURCE \
+            ./src/LessonTwoA.cpp -o ./build/LessonTwoA.o -c
+
+          figlet "Linking object files"
+          g++ ./build/LessonTwo.o ./build/LessonTwoA.o -o ./build/LessonTwo-exe
 
           figlet "invoking Debugger"
           gdb ./build/LessonOne-exe
@@ -68,10 +102,32 @@
       dontPatch = true;
       buildPhase = ''
         # Build output in a single step, with maximum optimsation, no debugging symbols - AND ALL THE WARNINGS
-        g++ -Wall -Werror -ansi -pedantic-errors -O3 ./src/LessonOne.cpp -o ./build/LessonOne
         mkdir -p $out
         mkdir -p $out/bin
-        mv build/LessonOne $out/bin/
+        g++ -Wall -Werror -ansi -pedantic-errors -O3 \
+        $src/src/LessonOne.cpp -o $out/bin/LessonOne
+      '';
+    };
+    
+    # generate final output stl files
+    packages."x86_64-linux".LessonTwo = pkgs.stdenv.mkDerivation
+    {
+      name = "cppTutorials";
+      src = self;
+      buildInputs =
+      [
+        pkgs.gcc
+        pkgs.gdb
+      ];
+      dontInstall = true;
+      dontPatch = true;
+      buildPhase = ''
+        # Build output in a single step, with maximum optimsation, no debugging symbols - AND ALL THE WARNINGS
+        mkdir -p $out
+        mkdir -p $out/bin
+        g++ -Wall -Werror -ansi -pedantic-errors -O3 \
+        $src/src/LessonTwo.cpp $src/src/LessonTwoA.cpp -o $out/bin/LessonTwo
+        mv build/LessonTwo $out/bin/
       '';
     };
 
