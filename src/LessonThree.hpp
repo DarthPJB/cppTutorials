@@ -11,9 +11,9 @@
 //Get strings for all!
 #include <string>
 
-#if ISSAC_IS_DOPE_DEF
-//embrace the void!
-EXPORT void MyHelloFunction(const char *);
+#ifdef ISSAC_IS_DOPE_DEF
+    //embrace the void!
+    EXPORT void MyHelloFunction(const char *);
 #else
     #include <dlfcn.h>
     typedef void (*MyHelloFunctionPtr)(const char *);
