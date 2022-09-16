@@ -13,7 +13,7 @@
 
 #ifdef ISSAC_IS_DOPE_DEF
     //embrace the void!
-    EXPORT void MyHelloFunction(const char *);
+    EXPORT void MyHelloFunction(const char *) asm ("MyHelloFunction");
 #else
     #include <dlfcn.h>
     typedef void (*MyHelloFunctionPtr)(const char *);
